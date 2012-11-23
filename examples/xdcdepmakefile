@@ -1,0 +1,44 @@
+# This makefile builds XDC dependent code for respective examples/demos/app
+
+dm81xx_EXAMPLES_PATH := $(ROOTDIR)/examples/dm81xx
+
+include $(ROOTDIR)/makerules/build_config.mk
+include $(ROOTDIR)/makerules/env.mk
+include $(ROOTDIR)/makerules/platform.mk
+include $($(_APP)_EXAMPLES_PATH)/app_properties.mk
+include xdcdep.mk
+
+.PHONY: xdcdepmake xdcdepcp
+
+ifeq ($(DEST_ROOT),)
+xdcdepmake: 
+	$(ECHO) XDC -PD $(_APP)
+	$(Q)cd $($(_APP)_EXAMPLES_PATH) && $(xdc_PATH)/xdc -PD .
+else
+
+xdcdepmake: xdcdepcp
+	$(ECHO) XDC -PD $(_APP)
+	$(Q)cd $(DEST_ROOT)/xdc/$(_APP) && $(xdc_PATH)/xdc -PD .
+
+xdcdepcp: $(DEST_ROOT)/xdc/$(_APP)/package.bld $(DEST_ROOT)/xdc/$(_APP)/package.xdc
+
+$(DEST_ROOT)/xdc/$(_APP)/package.xdc: $($(_APP)_EXAMPLES_PATH)/package.xdc
+	$(Q)$(MKDIR) -p $(DEST_ROOT)/xdc/$(_APP)
+	$(Q)cp $($(_APP)_EXAMPLES_PATH)/package.xdc $(DEST_ROOT)/xdc/$(_APP)
+
+$(DEST_ROOT)/xdc/$(_APP)/package.bld: $($(_APP)_EXAMPLES_PATH)/package.bld
+	$(Q)$(MKDIR) -p $(DEST_ROOT)/xdc/$(_APP)
+	$(Q)cp $($(_APP)_EXAMPLES_PATH)/package.bld $(DEST_ROOT)/xdc/$(_APP)
+endif
+
+ifeq ($(DEST_ROOT),)
+xdcdepclean:
+	$(ECHO) XDC CLEAN $(_APP)...
+	$(Q)cd $($(_APP)_EXAMPLES_PATH)/$(_SUBDIR_PATH) && $(xdc_PATH)/xdc clean -PD .
+else
+xdcdepclean: xdcdepcp
+	$(ECHO) XDC CLEAN $(_APP)...
+	$(Q)cd $(DEST_ROOT)/xdc/$(_APP) && $(xdc_PATH)/xdc clean -PD .
+endif
+
+# Nothing beyond this point

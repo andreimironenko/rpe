@@ -1,0 +1,37 @@
+var platform = java.lang.System.getenv("PLATFORM");
+
+var platFormMem = "1024M";
+
+  xdc.loadCapsule("dspsubsys.xs");
+
+var buildReleaseConfig = true;
+
+var Build         = xdc.useModule('xdc.bld.BuildEnvironment');
+var C674            = xdc.useModule('ti.targets.elf.C674');
+var pdsOpts = " -pdr -pden -pds=452 -pds=67 -pds1110";
+var rDefs  = " -DDBC_ASSERTS=0 -DGT_ASSERT=0 -DGT_TRACE=0";
+
+C674.rootDir        = java.lang.System.getenv("CGTOOLS_ELF");
+C674.ccOpts.suffix  += "--gcc -mi10 -mo --no_compress -DOS_DSPBIOS -DDBC_ASSERTS=1 -DGT_ASSERT=1 -DGT_TRACE=1 -DPLATFORM_EVM_SI";
+
+if (platform == "ti816x-evm") {
+C674.platforms = ["ti.platforms.evmDM8168"];
+}
+
+if (platform == "ti814x-evm") {
+C674.platforms = ["ti.platforms.evmDM8148"];
+}
+
+if (platform == "ti811x-evm") {
+C674.platforms = ["ti.platforms.evmTI811X"];
+}
+
+C674.platform = C674.platforms[0];
+
+Build.targets     = [
+                 C674,                                  
+                    ];
+
+var Pkg = xdc.module("xdc.bld.PackageContents");
+Pkg.attrs.compress = true;
+Pkg.attrs.profile = "debug"; /* default build profile is "debug" */

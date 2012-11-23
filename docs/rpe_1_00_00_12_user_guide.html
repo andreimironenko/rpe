@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>Remote Processor Execute (RPE) User Guide</title><!-- For now, we use the doxygen style sheet -->
+
+
+<link href="" rel="stylesheet" type="text/css">
+<style type="text/css">
+</style>
+<style type="text/css">
+</style></head>
+<body>
+<table width="100%">
+<tbody>
+<tr>
+<td bgcolor="black" width="1"><a href="http://www.ti.com"> <img src="tilogo.gif" border="0" height="54" width="222"></a></td>
+<td bgcolor="red"><img src="titagline.gif" height="26" width="314"></td>
+</tr>
+</tbody>
+</table>
+<h1><a name="_TOP">RPE 1.00.00.12 EA User Guide</a></h1>
+<p>
+This user guide is divided into the following sections:
+</p>
+<p class="sections">
+<a href="#Introduction">Introduction</a>,
+</p><p>
+<a href="#Building">Building RPE</a>,
+</p><p>
+<a href="#Installing">Installing RPE Libraries and Examples</a>,
+</p><p>
+<a href="#Running">Running Examples</a>,
+</p><p>
+<a href="#Testcases">Running Testcases</a>,
+</p><p>
+<a href="#References">References</a>,
+</p>
+<hr>
+<h2><a name="Introduction">Introduction</a></h2>
+RPE 1.00.00.12 is a EA release of RPE
+1.00.00.<br>
+<br>
+RPE is a lightweight remote processor execute engine. It allows linux
+programs to call into algorithms running on the DSP. More information
+is present in the docs/ directory. This document provides information
+on how to build, install RPE libraries and run the RPE AAC-LC example
+application.
+<br>
+<a href="#_TOP">back to top</a>
+<hr>
+<h2><a name="Building">Building RPE</a></h2>
+<p> The first step you will need to do to build RPE is to look
+at <b><i>env.mk</i></b> in the <b><i>makerules/</i></b>
+directory. This contains all the environment variables and dependent
+package directory paths. The directory path to each of the dependent
+packages needs to be updated. 
+</p>
+<p> Once you finish editing the file, you can verify your changes
+point to the right paths by running <b><i>make .show-products</i></b>
+in the RPE toplevel directory.
+</p>
+<p> Once you are satisfied with the changes made, to build the RPE
+libraries and examples, run <b><i>make all</i></b> in the RPE
+directory. All the libraries and binaries will be generated in the
+<b><i>lib</i></b> directory. Help for additional build targets can
+be found by running <b><i>make help</i></b>.
+</p>
+<hr>
+<h2><a name="Installing">Installing RPE Libraries and Examples</a></h2>
+<p> Running <b><i>make install</i></b> will install RPE header files,
+libraries, example applications and DSP binaries. You can change the
+staging directory where these are installed by overriding
+the <b><i>DESTDIR</i></b> variable.
+<hr>
+<h2><a name="Running">Running Examples</a></h2>
+<p> The current version of RPE comes with examples that shows how
+TI's AAC-LC Decoder, AAC-LC Encoder and MP3 Decoder can be integrated with RPE.
+<p> First we need to make sure that the DSP binaries for the example
+is loaded. Use the Firmware Loader to load the DSP Binary.
+</p>
+<p> Next, we run the AAC-LC Decoder example with path to the config
+file having the example parameters. A sample of the configuration file
+and an AAC-LC encoded file are found in the aac-lc decoder example
+directory.
+</p>
+For the AAC-LC and MP3 decoder, the sample configuration file contains the
+following parameters:
+<br>
+<pre>
+Playback mode             # 0 -> write to file, 1 -> ALSA playback
+Desired channel mode      # 0 -> mono, 1 -> stereo          
+Input file name
+Output file name
+</pre>
+<br>
+For the AAC-LC encoder, the configuration file contains the parameters:
+<br>
+<pre>
+Input mode              # 0 -> File based input, 1 -> ALSA capture
+Number of Channels      # 1 -> mono, 2-> stereo
+Sample rate             # Sample rate of the input pcm file.
+Bitrate                 # Encoder bitrate
+Input file name
+Output file name
+</pre>
+<br>
+<br><b>Note:</b> For wav files, samplerate and number of channels are taken from 
+wave header irrespective of the value entered by user.
+<hr>
+<h2><a name="Testcases">Running Testcases</a></h2>
+<p> The current version of RPE comes with test cases that uses the speech copy 
+codec to use the RPE framework. The test cases currently in the package are:
+<br> 
+1) Measuring the time taken for the process calls for the copy codec. The macro 
+NUMBER_OF_TIMES is used to define the number of process calls to be made. This 
+test case could be run by:
+<pre>
+         target # ./test1_a8host_debug.xv5T
+</pre>
+2) Running multiple threads of the RPE instances for the speech copy codec. 
+Currently, the macro MAX_NUM_OF_THREADS is set to 8 in the code. To run the test
+cases use the command:
+<pre>
+         target # ./test2_a8host_debug.xv5t -n numberofthreads
+</pre>
+<br><b>Note:</b> By default the test cases would not be compiled in the RPE 
+package. To compile the test cases, enable the macro RPE_USETESTCODEC in 
+makerules/env.mk file.
+</p>
+<h2><a name="References">References</a></h2>
+For information on how to integrate audio/voice codec in RPE, refer to the link
+<a href=http://processors.wiki.ti.com/index.php/How_to_integrate_audio/voice_in_RPE_in_EZSDK>click here</a>
+
+<p>Last updated: Sep 06, 2012 Build Ver: 1.00.00.12</p>
+</body></html></body>
+</html>
